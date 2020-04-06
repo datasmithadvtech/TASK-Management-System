@@ -22,7 +22,8 @@ public class JwtProvider {
 
     public String generateJwtToken(Authentication authentication) {
 
-        UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+        UserPrinciple userPrincipal = new UserPrinciple(authentication.getPrincipal().toString(), authentication.getCredentials().toString());
+
 
         return Jwts.builder()
 		                .setSubject((userPrincipal.getUsername()))

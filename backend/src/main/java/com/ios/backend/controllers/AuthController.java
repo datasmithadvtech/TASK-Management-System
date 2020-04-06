@@ -1,16 +1,22 @@
 package com.ios.backend.controllers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
 
+import com.ios.backend.security.CustomAuthenticationProvider;
+import com.ios.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,11 +48,10 @@ public class AuthController {
   @Autowired
   MailService s;
 
-	@Autowired
-	AuthenticationManager authenticationManager;
 
 	@Autowired
 	UserRepository userRepository;
+
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -57,19 +62,30 @@ public class AuthController {
 	@Autowired
 	JwtProvider jwtProvider;
 
+	@Autowired
+	private CustomAuthenticationProvider authProvider;
+
 	@PostMapping("/signin")
 	@CrossOrigin(origins = clientUrl)
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
+		Authentication authentication = null;
+		try {
+			 authentication = authProvider.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+		} catch (Exception ex) {
+			String msg = ex.getMessage().toString();
+		}
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		String jwt = jwtProvider.generateJwtToken(authentication);
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		long id = userRepository.getIdByUsername(userDetails.getUsername());
-		JwtResponse jwtRes = new JwtResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities(), id);
+
+		long id = userRepository.getIdByUsername(loginRequest.getUsername());
+		List<GrantedAuthority> authorities;
+		authorities = new ArrayList();
+		JwtResponse jwtRes = new JwtResponse(jwt, loginRequest.getUsername(), authorities, id);
 		return ResponseEntity.ok(jwtRes);
 	}
 

@@ -30,21 +30,21 @@ public class ProgramController {
   
   @PostMapping("/createProgram/{uid}")
   @CrossOrigin(origins = clientUrl)
-  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   public ResponseEntity<Boolean> createProgram(@PathVariable("uid") Long uid, @RequestBody NewProgramDTO newProgramDto) {
     service.createProgram(newProgramDto, uid);
     return new ResponseEntity<Boolean>(true,HttpStatus.OK);
   }
   
   @GetMapping("/getAllProgram")
-  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   @CrossOrigin(origins = clientUrl)
   public ResponseEntity<ProgramListResource> getAllProgram() {
     return new ResponseEntity<ProgramListResource>(service.getAll(), HttpStatus.OK);
   }
   
   @GetMapping("/getAllProgramByAdmin/{id}")
-  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   @CrossOrigin(origins = clientUrl)
   public ResponseEntity<ProgramListResource> getAllProgramByAdmin(@PathVariable("id") Long id) {
     ProgramListResource dto = service.getAllByAdmin(id);
@@ -52,7 +52,6 @@ public class ProgramController {
   }
   
   @GetMapping("/getAllProgramByUser/{uid}")
-  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   @CrossOrigin(origins = clientUrl)
   public ResponseEntity<ProgramListResource> getAllProgramByUser(@PathVariable("uid") Long uid) {
     
@@ -63,7 +62,7 @@ public class ProgramController {
   
   @PostMapping("/enterPrg")
   @CrossOrigin(origins = clientUrl)
-  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   public ResponseEntity<Boolean> enterProgram(@RequestBody CodeDTO code) {
     service.addUser(code.getUid(), code.getCode());
     return new ResponseEntity<Boolean>(true,HttpStatus.OK);

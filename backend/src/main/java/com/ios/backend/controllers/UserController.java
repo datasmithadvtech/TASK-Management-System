@@ -25,16 +25,16 @@ public class UserController {
 
   @GetMapping("/getAllUser")
   @CrossOrigin(origins = clientUrl)
-  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+  // @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   public ResponseEntity<UserListResource> getAllUser() {
     UserListResource ulr = new UserListResource();
     ulr.setUserList(service.getAllUser());
     return new ResponseEntity<UserListResource>(ulr, HttpStatus.OK);
   }
-  
+
   @GetMapping("/getAllUser/{pid}")
   @CrossOrigin(origins = clientUrl)
-  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+  // @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   public ResponseEntity<UserListResource> getAllUser(@PathVariable("pid") Long pid) {
     UserListResource ulr = new UserListResource();
     ulr.setUserList(service.getAllUserByProgram(pid));
@@ -43,7 +43,7 @@ public class UserController {
 
   @GetMapping("/getUser/{uid}")
   @CrossOrigin(origins = clientUrl)
-  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+  // @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
   public ResponseEntity<UserResource> getUserById(@PathVariable("uid") Long uid) {
     UserResource ur = new UserResource();
     BeanUtils.copyProperties(service.getUser(uid), ur);

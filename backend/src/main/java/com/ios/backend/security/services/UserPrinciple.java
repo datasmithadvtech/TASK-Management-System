@@ -37,6 +37,12 @@ public class UserPrinciple implements UserDetails {
         this.password = password;
         this.authorities = authorities;
     }
+    public UserPrinciple(
+                         String username, String password
+                         ) {
+        this.username = username;
+        this.password = password;
+    }
 
     public static UserPrinciple build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
